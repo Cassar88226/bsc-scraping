@@ -195,21 +195,24 @@ def get_transaction_info(unique_token_df, BNB_price):
     # remove the duplicate rows by token txn hash value
     hashnInOut_df = unique_token_df.drop_duplicates(subset=['hash', 'In/Out'], keep='first')
 
-    req_count = 0
+    req_count = 1
     first_time = time.time()
     for txnhash, In_Out in zip(hashnInOut_df['hash'], hashnInOut_df["In/Out"]):
         temp_purchased_BNB_value = 0
         temp_sold_BNB_value = 0
-        # get the internal transaction by txn hash
-        temp_purchased_BNB_value, temp_sold_BNB_value, last_timestamp = get_BNB_amount_by_txnhash(txnhash, In_Out)
-        
+
+        # if the consumed time is over 1 second(from API), needs to delay
         req_count += 1
         consumed_time = time.time() - first_time
-        print(consumed_time)
         if req_count >=5 and consumed_time < 1:
             req_count = 0
             print("deley {0} second".format(consumed_time))
             time.sleep(1 - consumed_time)
+            first_time = time.time()
+        
+        # get the internal transaction by txn hash
+        temp_purchased_BNB_value, temp_sold_BNB_value, last_timestamp = get_BNB_amount_by_txnhash(txnhash, In_Out)
+        
 
 
         #get the BNB and USD
@@ -386,7 +389,7 @@ def main():
     # get historical BNB price list
     BNB_price = get_historicalBNBprice()
 
-    address_list = get_all_wallet_list_from_file("wallets_for_parse - Copy.txt")
+    address_list = get_all_wallet_list_from_file("wallets_for_parse.txt")
     for address in address_list:
         wallet_elements = process_by_address(address, BNB_price)
         if wallet_elements is None:
