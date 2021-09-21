@@ -201,7 +201,7 @@ def get_transaction_info(unique_token_df, BNB_price):
         temp_purchased_BNB_value = 0
         temp_sold_BNB_value = 0
 
-        # if the consumed time is over 1 second(from API), needs to delay
+        # Delay when 5 API calls take more than 1 second
         req_count += 1
         consumed_time = time.time() - first_time
         if req_count >=5 and consumed_time < 1:
@@ -213,8 +213,6 @@ def get_transaction_info(unique_token_df, BNB_price):
         # get the internal transaction by txn hash
         temp_purchased_BNB_value, temp_sold_BNB_value, last_timestamp = get_BNB_amount_by_txnhash(txnhash, In_Out)
         
-
-
         #get the BNB and USD
         if last_timestamp != 0:
             date = get_date_from_TimeStamp(last_timestamp)
