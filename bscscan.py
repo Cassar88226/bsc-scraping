@@ -8,7 +8,6 @@ import argparse
 import os
 
 DEFAUT_DATE_DELTA = 30
-# API_Key = "QEZVFI816I1TYVZTQVY7MWE4BMDBDW3KHE", "UFMJNZ1NHXDZ8ZXJPJBPVUKGAZGV4R9EZ4"
 PANCAKESWAP_ADDRESSES = ["0x10ED43C718714eb63d5aA57B78B54704E256024E", "0xF09B7EB9DfB93CC02a2fd6D4c683715c8BDe5b30", "0x758f64ef25781Ee699C69e7DF0fc09BdCf5C6D04"]
 TRANSACTION_BASEURL = "https://api.bscscan.com/api?module=account&action=txlist&address={0}&startblock=0&endblock=999999999&sort=asc&apikey={1}" 
 BEP20_TOEKEN_BASEURL = "https://api.bscscan.com/api?module=account&action=tokentx&address={0}&startblock=0&endblock=999999999&sort=asc&apikey={1}"
@@ -22,7 +21,7 @@ if not os.path.exists(EXPORT_CSV_BASE_FOLDER):
 
 parser = argparse.ArgumentParser(description='Description of your program')
 parser.add_argument('-t','--timeframe', help='timeframe', default=DEFAUT_DATE_DELTA)
-parser.add_argument('-api', '--apikey', help = 'Api Key', default = "FQ7Z3A4VMACSW9K3P2UZ2Y9H4HTQXHM7FA")
+parser.add_argument('-api', '--apikey', help = 'Api Key', default = "")
 # parser.add_argument('-w','--walletlist', help='wallet list', required=True)
 args = parser.parse_args()
 print(args.timeframe)
@@ -212,7 +211,7 @@ def get_transaction_info(unique_token_df, BNB_price):
         
         # get the internal transaction by txn hash
         temp_purchased_BNB_value, temp_sold_BNB_value, last_timestamp = get_BNB_amount_by_txnhash(txnhash, In_Out)
-        
+
         #get the BNB and USD
         if last_timestamp != 0:
             date = get_date_from_TimeStamp(last_timestamp)
