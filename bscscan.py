@@ -115,11 +115,13 @@ def get_historicalBNBprice(date_delta = DEFAUT_DATE_DELTA):
 # add the In/Out filed in dataframe
 def add_In_Out_field(dataframe, address):
     newField_list = []
-    for index in range(len(dataframe['from'])):
-        if dataframe['from'][index].lower() == address.lower():
+    for index, row in dataframe.iterrows():
+        if row['from'].lower() == address.lower():
             newField_list.append('Out')
-        elif dataframe['to'][index].lower() == address.lower():
+        elif row['to'].lower() == address.lower():
             newField_list.append("In")
+        else:
+            newField_list.append("Unknown")
     dataframe["In/Out"] = newField_list
 
     return dataframe
@@ -386,7 +388,7 @@ def main():
     # get historical BNB price list
     BNB_price = get_historicalBNBprice()
 
-    address_list = get_all_wallet_list_from_file("wallets_for_parse.txt")
+    address_list = get_all_wallet_list_from_file("wallets_for_parse - Copy.txt")
     for address in address_list:
         wallet_elements = process_by_address(address, BNB_price)
         if wallet_elements is None:
